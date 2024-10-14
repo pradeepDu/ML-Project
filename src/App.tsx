@@ -3,24 +3,10 @@ import React, { useState } from 'react';
 import InputForm from './components/Input'; // Ensure the form is imported correctly
 
 const App: React.FC = () => {
-  const [formData, setFormData] = useState({
-    age: '',
-    weight: '',
-    height: '',
-    duration: '',
-    bodyTemp: '',
-    heartRate: ''
-  });
   const [message, setMessage] = useState('');
 
-  // Function to handle the form data
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
   // Function to send form data to Flask backend and get prediction
-  const getPrediction = async () => {
+  const getPrediction = async (formData: any) => {
     try {
       const response = await fetch('http://localhost:5000/predict', {
         method: 'POST',
@@ -28,12 +14,13 @@ const App: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          age: formData.age,
-          height: formData.height,
-          weight: formData.weight,
-          duration: formData.duration,
-          heartRate: formData.heartRate,
-          bodyTemp: formData.bodyTemp
+          Age: formData.age,
+          Height: formData.height,
+          Weight: formData.weight,
+          Duration: formData.duration,
+          Heart_Rate: formData.heartRate,
+          Body_Temp: formData.bodyTemp,
+          Gender: formData.gender, // Assuming gender is included in formData
         }),
       });
       const data = await response.json();
@@ -52,11 +39,7 @@ const App: React.FC = () => {
       <div className="w-full max-w-md">
         <h1 className="text-3xl font-bold text-center mb-6">Calorie Prediction App</h1>
         
-        <InputForm formData={formData} handleChange={handleChange} /> {/* Render the form */}
-
-        <button className="btn btn-primary w-full mt-4" onClick={getPrediction}>
-          Get Prediction
-        </button>
+        <InputForm onResponse={getPrediction} /> {/* Pass getPrediction directly */}
 
         {message && <p className="mt-4 text-center text-lg">{message}</p>}
       </div>
