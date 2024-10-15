@@ -1,6 +1,8 @@
 // src/App.tsx
 import React, { useState } from 'react';
-import InputForm from './components/Input'; // Ensure the form is imported correctly
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import InputForm from './components/Input';
+import HomePage from './components/HomePage';
 
 const App: React.FC = () => {
   const [message, setMessage] = useState('');
@@ -35,16 +37,20 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-800 text-white p-6">
-      <div className="w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center mb-6">Calorie Prediction App</h1>
-        
-        <InputForm onResponse={getPrediction} /> {/* Pass getPrediction directly */}
-
-        {message && <p className="mt-4 text-center text-lg">{message}</p>}
+    <Router>
+      <div className="flex min-h-screen bg-gray-800 text-white p-6">
+        <div className="w-full max-w-md">
+          <h1 className="text-3xl font-bold text-center mb-6">Calorie Prediction App</h1>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/input" element={<InputForm onResponse={getPrediction} />} /> {/* Pass getPrediction to InputForm */}
+          </Routes>
+          {message && <p className="mt-4 text-center text-lg">{message}</p>}
+        </div>
       </div>
-    </div>
+    </Router>
   );
 };
 
 export default App;
+
